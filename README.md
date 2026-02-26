@@ -1,0 +1,2 @@
+# TripMind
+Experimenting app
