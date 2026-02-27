@@ -78,6 +78,16 @@ data/
 - **uploads/{tripId}/:** All files for that trip (docs, images, audio). Served by `/api/trip/[tripId]/files/[filename]`.
 - **index/{tripId}.json:** Chunks from uploaded docs and notes, with embeddings for semantic search.
 
+### File-based storage: why and when
+
+TripMind uses **file-based storage** (no database): JSON files for trips and index, and a folder per trip for uploads. This keeps the stack simple and data easy to inspect and back up.
+
+**Benefits:** No DB server or migrations; data is portable (copy `./data`); backups are straightforward; good fit for single-instance, dev, or small-scale use.
+
+**Trade-offs:** No built-in locking or transactions. To avoid concurrent updates overwriting each other, all read–modify–write operations for a given trip run under a **per-trip lock** (in-memory), so only one writer runs at a time per trip. Different trips can still be updated in parallel.
+
+**Production:** Fine for one Node process and moderate concurrency (e.g. hundreds of users, tens of concurrent requests). For multiple app instances or serverless, you’d need a shared store (e.g. S3) and a distributed or file-based locking strategy; S3 alone does not fix read–modify–write races.
+
 ## API routes
 
 | Method | Route | Description |
