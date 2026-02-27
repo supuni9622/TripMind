@@ -78,6 +78,9 @@ web_modules/
 .next
 out
 
+# Local persistence (no DB)
+data/
+
 # Nuxt.js build / generate output
 .nuxt
 dist
